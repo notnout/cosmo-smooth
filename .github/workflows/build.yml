@@ -1,0 +1,45 @@
+name: Build DOS32 Executables
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-dos32:
+    name: Build 32-bit DOS (Open Watcom v2)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Open Watcom v2 snapshot
+        run: |
+          mkdir -p /tmp/watcom
+          curl -fL "https://github.com/open-watcom/open-watcom-v2/releases/download/Current-build/ow-snapshot.tar.xz" \
+            -o /tmp/ow-snapshot.tar.xz
+          tar -xJf /tmp/ow-snapshot.tar.xz -C /tmp/watcom
+
+      - name: Build COSMO1.EXE, COSMO2.EXE, COSMO3.EXE
+        env:
+          WATCOM: /tmp/watcom
+        run: ./build.sh
+
+      - name: Verify executables
+        run: |
+          for ep in 1 2 3; do
+            test -s "bin/COSMO${ep}.EXE"
+          done
+          ls -lh bin/COSMO*.EXE
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cosmo-smooth-dos32-exes
+          path: |
+            bin/COSMO1.EXE
+            bin/COSMO2.EXE
+            bin/COSMO3.EXE
+            LICENSE
+            ATTRIBUTION.md
+            README.md

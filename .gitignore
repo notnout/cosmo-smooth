@@ -1,0 +1,24 @@
+# Build artifacts and packaged distributions
+build/
+dist/
+
+# Copyrighted original game data files (never commit!)
+gamedata/*
+!gamedata/README.md
+*.STN
+*.stn
+*.VOL
+*.vol
+
+# Runtime save/config/diagnostic files
+*.CFG
+*.cfg
+*.SV*
+*.sv*
+COSMO.LOG
+SNAP*.PPM
+*.zip
+
+# OS metadata
+.DS_Store
+Thumbs.db
