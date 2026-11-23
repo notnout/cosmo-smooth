@@ -27,6 +27,7 @@ static volatile int chain_int9_flag;
 static volatile int isr_depth;
 
 static volatile uint32_t pit0_period = 65536u;
+static volatile uint32_t pit_irq_count;
 static volatile uint64_t pit_ticks_total;
 static volatile uint64_t last_monotonic_ticks;
 
@@ -88,11 +89,6 @@ void hw_vga_set_dac(uint8_t index, uint8_t r6, uint8_t g6, uint8_t b6)
     outp(0x03C9, b6);
 }
 
-int hw_vga_in_retrace(void)
-{
-    return (inp(0x03DA) & 0x08) != 0;
-}
-
 uint8_t *hw_vga_framebuffer(void)
 {
     return (uint8_t *)0xA0000UL;
@@ -101,6 +97,7 @@ uint8_t *hw_vga_framebuffer(void)
 static void __interrupt __far hw_int8_isr(void)
 {
     isr_depth++;
+    pit_irq_count++;
     pit_ticks_total += pit0_period;
     chain_int8_flag = 0;
 
@@ -160,8 +157,17 @@ void hw_restore_irqs(void)
     outp(0x0040, 0x00);
     outp(0x0040, 0x00);
     pit0_period = 65536u;
-    /* Silence PC speaker */
+    /* Silence PC speaker and AdLib OPL2 key-on registers */
     outp(0x0061, inp(0x0061) & ~0x03);
+    {
+        int ch, d;
+        for (ch = 0; ch < 9; ++ch) {
+            outp(0x0388, (unsigned char)(0xB0 + ch));
+            for (d = 0; d < 6; ++d) (void)inp(0x0388);
+            outp(0x0389, 0x00);
+            for (d = 0; d < 35; ++d) (void)inp(0x0388);
+        }
+    }
     _dos_setvect(8, orig_int8);
     _dos_setvect(9, orig_int9);
     user_int8_cb = NULL;
@@ -188,6 +194,11 @@ int hw_in_isr(void)
 void hw_set_pit0_divisor(uint16_t divisor)
 {
     pit0_period = divisor ? (uint32_t)divisor : 65536u;
+}
+
+uint32_t hw_irq8_count(void)
+{
+    return pit_irq_count;
 }
 
 uint64_t hw_read_pit_ticks(void)

@@ -66,10 +66,10 @@ COMMON_FLAGS=(
 )
 
 echo "=== Compiling 32-bit DOS platform layer ($OS/$ARCH -> DOS32) ==="
-wcc386 "${COMMON_FLAGS[@]}" -fo="$BUILD/dos_hw.obj"       "$ROOT/src/platform/dos_hw.c"
-wcc386 "${COMMON_FLAGS[@]}" -fo="$BUILD/ega.obj"          "$ROOT/src/platform/ega.c"
-wcc386 "${COMMON_FLAGS[@]}" -fo="$BUILD/dos_video.obj"    "$ROOT/src/platform/dos_video.c"
-wcc386 "${COMMON_FLAGS[@]}" -fo="$BUILD/dos_platform.obj" "$ROOT/src/platform/dos_platform.c"
+wcc386 "${COMMON_FLAGS[@]}" -w3 -we -fo="$BUILD/dos_hw.obj"       "$ROOT/src/platform/dos_hw.c"
+wcc386 "${COMMON_FLAGS[@]}" -w3 -we -fo="$BUILD/ega.obj"          "$ROOT/src/platform/ega.c"
+wcc386 "${COMMON_FLAGS[@]}" -w3 -we -fo="$BUILD/dos_video.obj"    "$ROOT/src/platform/dos_video.c"
+wcc386 "${COMMON_FLAGS[@]}" -w3 -we -fo="$BUILD/dos_platform.obj" "$ROOT/src/platform/dos_platform.c"
 
 for EP in 1 2 3; do
     echo "=== Building COSMO${EP}.EXE (Episode ${EP}) ==="

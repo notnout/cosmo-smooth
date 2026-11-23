@@ -17,9 +17,6 @@
 #include "dos_hw.h"
 
 extern void InnerMain(int argc, char *argv[]);
-extern void dos_video_idle(void);
-extern void dos_video_drop_motion(void);
-extern void dos_video_enable_diag(void);
 extern uint8_t isInGame;
 
 static volatile int toggle_smooth_req;

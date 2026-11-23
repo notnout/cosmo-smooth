@@ -8,6 +8,7 @@
 #include <string.h>
 
 #include "cosmo/ega.h"
+#include "cosmo/video.h"
 
 ega_state ega;
 ega_wide_terrain ega_wide_pages[2];
@@ -193,10 +194,6 @@ static inline uint8_t apply_function(uint8_t data, uint8_t latch, uint8_t fn)
     }
 }
 
-extern volatile int dos_ega_dirty;
-extern void dos_video_sync_palette_entry(uint8_t index, uint8_t color_value);
-extern void dos_video_sync_all_palette(void);
-
 void ega_write(uint32_t addr, uint8_t value)
 {
     uint8_t write_mode = (uint8_t)(ega.mode & 0x03);
@@ -243,6 +240,8 @@ void ega_write(uint32_t addr, uint8_t value)
     }
     if (addr >= ega.display_start && addr < (uint32_t)ega.display_start + EGA_PAGE_BYTES) {
         dos_ega_dirty = 1;
+    } else if (addr >= 0xA300u && addr < 0xA300u + 5760u) {
+        dos_backdrop_dirty = 1;
     }
 }
 
@@ -261,6 +260,7 @@ void ega_set_video_mode(uint8_t mode)
         memset(ega.vram, 0, sizeof ega.vram);
         dos_video_sync_all_palette();
         dos_ega_dirty = 1;
+        dos_backdrop_dirty = 1;
     }
 }
 

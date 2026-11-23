@@ -54,7 +54,7 @@ Load any generated `.zip` directly in RetroArch using the **DOSBox Pure** core.
 | `Space` | Jump *(rebindable in **Game Settings → Keyboard Mapping**)* |
 | `Alt` | Drop bomb |
 | `[` | Toggle **Smooth 70 Hz** / **Classic 11 Hz** live during gameplay |
-| `]` | Toggle **Normal** / **Turbo** tick pacing (applies on next level/loop) |
+| `]` | Toggle **Normal** / **Turbo** tick pacing live during gameplay |
 | `F1` | In-game help & **Game Settings → Display Filter** toggle |
 | `--classic` / `/classic` | Start in classic 11 Hz EGA-paced mode |
 | `--turbo` / `/turbo` | Start in Turbo tick mode (~14 Hz logic) |

@@ -10417,9 +10417,9 @@ won or the player quits.
 */
 static void GameLoop(byte demo_state)
 {
-    const word frame_ticks = demo_state == DEMO_STATE_NONE && PlatformTurboMode() ? 10 : 13;
-
     for (;;) {
+        const word frame_ticks = demo_state == DEMO_STATE_NONE && PlatformTurboMode() ? 10 : 13;
+
         while (gameTickCount < frame_ticks)
             PlatformIdle();
 
