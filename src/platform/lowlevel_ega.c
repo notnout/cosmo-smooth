@@ -101,6 +101,16 @@ void DrawPreviewEffectTile(const byte *pixels, word x, word y, word mode)
     video_preview_star_tile(draw_page_number, pixels, x, y, mode == DRAW_MODE_WHITE);
 }
 
+int BeginPreviewOverlay(void)
+{
+    return video_preview_overlay_begin(draw_page_number);
+}
+
+void DrawPreviewOverlayTile(const byte *pixels, word x, word y)
+{
+    video_preview_overlay_tile(draw_page_number, pixels, x, y);
+}
+
 static bool is_backdrop_tile(unsigned address)
 {
     return address >= EGA_OFFSET_BDROP_EVEN &&

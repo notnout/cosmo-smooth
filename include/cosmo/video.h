@@ -40,5 +40,8 @@ void video_preview_effect_mark_slow_rise(unsigned page);
 void video_preview_star_tile(unsigned page, const uint8_t *pixels,
                              unsigned x, unsigned y, bool white);
 void video_preview_star_occlude(unsigned page, unsigned x, unsigned y, uint8_t bits);
+bool video_preview_overlay_begin(unsigned page);
+void video_preview_overlay_tile(unsigned page, const uint8_t *pixels,
+                                unsigned x, unsigned y);
 
 #endif /* COSMO_VIDEO_H */

@@ -284,6 +284,8 @@ void DrawPreviewPlayerTile(const byte *pixels, word x, word y, int white);
 void OccludePreviewPlayerTile(word x, word y);
 int BeginPreviewStar(dword identity, int x, int y, int spin);
 void DrawPreviewStarTile(const byte *pixels, word x, word y);
+int BeginPreviewOverlay(void);
+void DrawPreviewOverlayTile(const byte *pixels, word x, word y);
 void DrawCartoon(byte, word, word);
 word GetMapTile(word, word);
 void SetMapTile(word, word, word);
@@ -5130,7 +5132,7 @@ static bool CaptureSmoothEffect(dword identity, word sprite, word frame,
         sprite == SPR_STONE_HEAD_CRUSHER || sprite == SPR_SPEAR;
     int screen_x = edge_padding ? (int16_t)(x - scrollX) : (int)x - scrollX;
     int screen_y = edge_padding ? (int16_t)(y - scrollY) : (int)y - scrollY;
-    if (demoState != DEMO_STATE_NONE ||
+    if (demoState == DEMO_STATE_RECORD ||
         !BeginPreviewEffect(identity, screen_x, screen_y, mode, sprite == SPR_EXPLOSION, edge_padding)) {
         return false;
     }
@@ -8087,7 +8089,7 @@ static void ProcessActor(word index)
             return;
         }
         if (nextDrawMode == DRAW_MODE_NORMAL &&
-            demoState == DEMO_STATE_NONE &&
+            demoState != DEMO_STATE_RECORD &&
             act->sprite != SPR_RED_CHOMPER &&
             !(act->sprite == SPR_PARACHUTE_BALL && act->falltime >= 2) &&
             BeginPreviewStar((previewStarIdentity[index] << 16) | index,
@@ -10459,7 +10461,27 @@ static void GameLoop(byte demo_state)
         DrawLights();
 
         if (demoState != DEMO_STATE_NONE) {
-            DrawSprite(SPR_DEMO_OVERLAY, 0, 18, 4, DRAW_MODE_ABSOLUTE);
+            if (BeginPreviewOverlay()) {
+                word offset = *(actorInfoData + SPR_DEMO_OVERLAY);
+                word height = *(actorInfoData + offset);
+                word width = *(actorInfoData + offset + 1);
+                byte *src = actorTileData[*(actorInfoData + offset + 3)] + *(actorInfoData + offset + 2);
+                word oy = (4 - height) + 1;
+                word ox = 18;
+                for (;;) {
+                    DrawPreviewOverlayTile(src, ox, oy);
+                    src += 40;
+                    if (ox == 18 + width - 1) {
+                        if (oy == 4) break;
+                        ox = 18;
+                        oy++;
+                    } else {
+                        ox++;
+                    }
+                }
+            } else {
+                DrawSprite(SPR_DEMO_OVERLAY, 0, 18, 4, DRAW_MODE_ABSOLUTE);
+            }
         }
 
 #ifdef DEBUG_BAR

@@ -158,6 +158,11 @@ static bool preview_previous_player_tracked = false;
 static int preview_previous_player_x = 0;
 static int preview_previous_player_y = 0;
 
+/* Fixed screen-space overlay layer (e.g. DEMO sign), never shifted by camera. */
+static preview_sprite preview_overlay_buf[3];
+static preview_sprite *preview_overlay_pages[2] = { &preview_overlay_buf[0], &preview_overlay_buf[1] };
+static preview_sprite *preview_current_overlay = &preview_overlay_buf[2];
+
 typedef struct {
     preview_sprite *sprites;
     size_t count, capacity;
@@ -363,6 +368,7 @@ void video_preview_begin_player(unsigned page)
 {
     if (!smooth_enabled || page >= 2) return;
     reset_preview_sprite(preview_player_pages[page], true);
+    reset_preview_sprite(preview_overlay_pages[page], false);
     preview_star_pages[page].count = 0;
     memset(preview_star_terrain[page][MOTION_WORLD_TOP], 0,
            (size_t)MOTION_WORLD_ROWS * OCC_STRIDE);
@@ -499,6 +505,19 @@ void video_preview_star_occlude(unsigned page, unsigned x, unsigned y, uint8_t b
     if (!list->count) preview_star_terrain[page][y][x] |= bits;
     for (i = 0; i < list->count; ++i)
         list->sprites[i].occlusion[y][x] |= bits;
+}
+
+bool video_preview_overlay_begin(unsigned page)
+{
+    if (!smooth_enabled || page >= 2) return false;
+    preview_overlay_pages[page]->visible = true;
+    return true;
+}
+
+void video_preview_overlay_tile(unsigned page, const uint8_t *pixels,
+                                unsigned x, unsigned y)
+{
+    if (page < 2) preview_sprite_tile(preview_overlay_pages[page], pixels, x, y, false);
 }
 
 /* ------------------------------------------------------------------------ */
@@ -838,6 +857,21 @@ static void render_preview_sprites(uint8_t *out, int dx, int dy, double alpha)
     }
 }
 
+static void render_preview_overlay(uint8_t *out)
+{
+    const preview_sprite *ov = preview_current_overlay;
+    int y, x;
+    if (!ov->visible || ov->right <= ov->left || ov->bottom <= ov->top) return;
+    for (y = ov->top; y < ov->bottom; ++y) {
+        const uint8_t *src_row = ov->pixels[y];
+        uint8_t *dst_row = out + y * FB_W;
+        for (x = ov->left; x < ov->right; ++x) {
+            unsigned color = src_row[x];
+            if (color) dst_row[x] = (uint8_t)(color - 1);
+        }
+    }
+}
+
 static bool render_motion_frame(uint8_t *out, uint64_t now)
 {
     bool sprite_visible;
@@ -846,10 +880,12 @@ static bool render_motion_frame(uint8_t *out, uint64_t now)
 
     if (!smooth_enabled || pause_depth || motion_frame_count == 0) return false;
 
-    sprite_visible = preview_current_player->visible || preview_stars.count != 0;
+    sprite_visible = preview_current_player->visible || preview_stars.count != 0 ||
+                     preview_current_overlay->visible;
     if (sprite_visible && (motion_frame_count == 1 || !motion_camera_valid)) {
         memcpy(out, motion_current, FB_PIXELS);
         render_preview_sprites(out, 0, 0, 1.0);
+        render_preview_overlay(out);
         return true;
     }
     if (motion_frame_count < 2 || !motion_camera_valid ||
@@ -871,6 +907,7 @@ static bool render_motion_frame(uint8_t *out, uint64_t now)
     dy = (int)motion_current_camera_y - (int)motion_previous_camera_y;
     render_pixel_camera(out, dx * 8, dy * 8, alpha);
     render_preview_sprites(out, dx, dy, alpha);
+    render_preview_overlay(out);
     return true;
 }
 
@@ -920,6 +957,7 @@ void video_set_motion_interpolation(bool enabled)
     motion_frame_count = 0;
     preview_current_player->visible = false;
     preview_current_player->tracked = false;
+    preview_current_overlay->visible = false;
     preview_stars.count = 0;
     preview_previous_stars.count = 0;
 }
@@ -989,6 +1027,10 @@ void video_capture_motion_frame(uint16_t scroll_x, uint16_t scroll_y,
         tmp_player = preview_current_player;
         preview_current_player = preview_player_pages[page];
         preview_player_pages[page] = tmp_player;
+
+        tmp_player = preview_current_overlay;
+        preview_current_overlay = preview_overlay_pages[page];
+        preview_overlay_pages[page] = tmp_player;
 
         recycled = preview_previous_stars;
         preview_previous_stars = preview_stars;
