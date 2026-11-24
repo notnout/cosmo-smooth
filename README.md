@@ -1,6 +1,6 @@
 <h3 align="center">
 	<img src="docs/logo.png" width="100" alt="cosmo-smooth logo"/><br/>
-	cosmo-smooth — 70 Hz Smooth Scrolling for <em>Cosmo's Cosmic Adventure</em> (DOS32)
+	cosmo-smooth — Smooth Scrolling for <em>Cosmo's Cosmic Adventure</em>
 </h3>
 <p align="center">
     <a href="https://github.com/notnout/cosmo-smooth/stargazers"><img alt="Stargazers" src="https://img.shields.io/github/stars/notnout/cosmo-smooth?colorA=363a4f&colorB=b7bdf8&style=for-the-badge"></a>
@@ -9,12 +9,11 @@
     <a href="https://github.com/notnout/cosmo-smooth/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/notnout/cosmo-smooth?colorA=363a4f&colorB=8bd5ca&style=for-the-badge"></a>
 </p>
 
-<p align="center">
-  <a href="docs/comparison.mp4">
-    <img src="docs/comparison-preview.png" alt="Before vs After — Original 10.8 FPS vs cosmo-smooth 70 Hz (click to watch 60 FPS MP4)"/>
-  </a><br/>
-  <sub><b>Before vs. After (60 FPS capture):</b> click to watch <a href="docs/comparison.mp4"><code>docs/comparison.mp4</code></a> — Original 10.8 FPS (left) vs. <code>cosmo-smooth</code> 70 Hz (right).</sub>
-</p>
+
+https://github.com/user-attachments/assets/efbd7969-9dc6-48bd-a90c-5cecbaa238a4
+
+<sub><b>Before vs. After (60 FPS capture):</b> click to watch <a href="docs/comparison.mp4"><code>docs/comparison.mp4</code></a> — Original 10.8 FPS (left) vs. <code>cosmo-smooth</code> 70 Hz (right).</sub>
+
 
 ## About cosmo-smooth
 
