@@ -12,6 +12,14 @@ The original 1992 EGA game scrolls in chunky 8-pixel tile jumps at ~10.8 FPS. `c
 
 ---
 
+## Before & After Comparison (60 FPS Video)
+
+[![Before vs After — Original 10.8 FPS vs cosmo-smooth 70 Hz (click to watch 60 FPS MP4)](docs/comparison-preview.png)](docs/comparison.mp4)
+
+> **Watch the 60 FPS side-by-side comparison:** [`docs/comparison.mp4`](docs/comparison.mp4) *(12 s, 1296×448 @ 60 FPS H.264 — synchronized capture of the Episode 1 attract-mode demo comparing `--classic` 10.8 FPS on the left vs `cosmo-smooth` 70 Hz on the right).*
+
+---
+
 ## Quick Start (Prebuilt Open-Source EXEs Included)
 
 This repository includes prebuilt open-source executables in [`bin/`](bin/) (`COSMO1.EXE`, `COSMO2.EXE`, `COSMO3.EXE`). Original game data files (`.STN` / `.VOL`) are copyrighted by Apogee Software and are **not** included — supply your own shareware or registered episode files.
@@ -64,14 +72,62 @@ Load any generated `.zip` directly in RetroArch using the **DOSBox Pure** core.
 
 ## Building from Source
 
-Requires **[Open Watcom v2](https://github.com/open-watcom/open-watcom-v2/releases/tag/Current-build)** (`ow-snapshot.tar.xz` includes native binaries for macOS Apple Silicon `armo64`, macOS Intel `bino64`, Linux x86_64 `binl64`, Linux ARM64 `arml64`, and Windows `binnt64`).
+`cosmo-smooth` cross-compiles to 32-bit MS-DOS using **[Open Watcom v2](https://github.com/open-watcom/open-watcom-v2/releases/tag/Current-build)**. No other libraries or SDKs are required — all three executables are written to `bin/COSMO1.EXE`, `bin/COSMO2.EXE`, and `bin/COSMO3.EXE`.
+
+### macOS (Apple Silicon & Intel)
 
 ```bash
-export WATCOM=/path/to/watcom
+# 1. Download and extract Open Watcom v2 (includes native arm64 & x86_64 binaries)
+mkdir -p ~/watcom
+curl -fL "https://github.com/open-watcom/open-watcom-v2/releases/download/Current-build/ow-snapshot.tar.xz" -o /tmp/ow-snapshot.tar.xz
+tar -xJf /tmp/ow-snapshot.tar.xz -C ~/watcom
+rm /tmp/ow-snapshot.tar.xz
+
+# 2. Clear macOS Gatekeeper quarantine on the extracted compiler binaries
+xattr -dr com.apple.quarantine ~/watcom
+
+# 3. Build COSMO1.EXE, COSMO2.EXE, and COSMO3.EXE
+export WATCOM="$HOME/watcom"
 ./build.sh
 ```
 
-`build.sh` compiles all three self-contained 32-bit DOS executables into `bin/COSMO1.EXE`, `bin/COSMO2.EXE`, and `bin/COSMO3.EXE`.
+### Linux (x86_64 & ARM64)
+
+```bash
+# 1. Download and extract Open Watcom v2
+mkdir -p ~/watcom
+curl -fL "https://github.com/open-watcom/open-watcom-v2/releases/download/Current-build/ow-snapshot.tar.xz" -o /tmp/ow-snapshot.tar.xz
+tar -xJf /tmp/ow-snapshot.tar.xz -C ~/watcom
+rm /tmp/ow-snapshot.tar.xz
+
+# 2. Build COSMO1.EXE, COSMO2.EXE, and COSMO3.EXE
+export WATCOM="$HOME/watcom"
+./build.sh
+```
+
+### Windows (x64 / x86)
+
+1. Install Open Watcom v2 from the [Open Watcom v2 Current-build releases](https://github.com/open-watcom/open-watcom-v2/releases/tag/Current-build) (either run `open-watcom-2_0-c-win-x64.exe` into `C:\watcom`, or extract `ow-snapshot.tar.xz` to `C:\watcom`).
+2. Build using **Command Prompt** (`cmd.exe`):
+
+   ```bat
+   set WATCOM=C:\watcom
+   build.bat
+   ```
+
+   Or using **PowerShell**:
+
+   ```powershell
+   $env:WATCOM = "C:\watcom"
+   .\build.bat
+   ```
+
+   Or using **Git Bash / MSYS2**:
+
+   ```bash
+   export WATCOM="/c/watcom"
+   ./build.sh
+   ```
 
 ---
 
