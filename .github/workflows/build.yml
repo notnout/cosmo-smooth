@@ -43,3 +43,42 @@ jobs:
             LICENSE
             ATTRIBUTION.md
             README.md
+
+  release:
+    name: Publish GitHub Release
+    needs: build-dos32
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: cosmo-smooth-dos32-exes
+          path: release-bin
+
+      - name: Assemble release archive
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          stage="cosmo-smooth-${TAG}-dos32"
+          mkdir -p "$stage/bin" "$stage/gamedata" dist
+          cp release-bin/bin/COSMO1.EXE release-bin/bin/COSMO2.EXE release-bin/bin/COSMO3.EXE "$stage/bin/"
+          cp gamedata/README.md "$stage/gamedata/"
+          cp package.sh README.md LICENSE ATTRIBUTION.md "$stage/"
+          chmod +x "$stage/package.sh"
+          zip -qr "dist/${stage}.zip" "$stage"
+          (cd dist && sha256sum "${stage}.zip" > SHA256SUMS.txt)
+          ls -lh dist
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" \
+            --title "cosmo-smooth $TAG" \
+            --generate-notes \
+            dist/*

@@ -1,4 +1,22 @@
-# cosmo-smooth
+<h3 align="center">
+	<img src="docs/logo.png" width="100" alt="cosmo-smooth logo"/><br/>
+	cosmo-smooth — 70 Hz Smooth Scrolling for <em>Cosmo's Cosmic Adventure</em> (DOS32)
+</h3>
+<p align="center">
+    <a href="https://github.com/notnout/cosmo-smooth/stargazers"><img alt="Stargazers" src="https://img.shields.io/github/stars/notnout/cosmo-smooth?colorA=363a4f&colorB=b7bdf8&style=for-the-badge"></a>
+    <a href="https://github.com/notnout/cosmo-smooth/issues"><img alt="Issues" src="https://img.shields.io/github/issues/notnout/cosmo-smooth?colorA=363a4f&colorB=f5a97f&style=for-the-badge"></a>
+    <a href="https://github.com/notnout/cosmo-smooth/releases"><img alt="Release" src="https://img.shields.io/github/v/release/notnout/cosmo-smooth?colorA=363a4f&colorB=a6da95&style=for-the-badge"></a>
+    <a href="https://github.com/notnout/cosmo-smooth/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/notnout/cosmo-smooth?colorA=363a4f&colorB=8bd5ca&style=for-the-badge"></a>
+</p>
+
+<p align="center">
+  <a href="docs/comparison.mp4">
+    <img src="docs/comparison-preview.png" alt="Before vs After — Original 10.8 FPS vs cosmo-smooth 70 Hz (click to watch 60 FPS MP4)"/>
+  </a><br/>
+  <sub><b>Before vs. After (60 FPS capture):</b> click to watch <a href="docs/comparison.mp4"><code>docs/comparison.mp4</code></a> — Original 10.8 FPS (left) vs. <code>cosmo-smooth</code> 70 Hz (right).</sub>
+</p>
+
+## About cosmo-smooth
 
 A **32-bit MS-DOS** smooth-scrolling build of ***Cosmo's Cosmic Adventure*** (Apogee, 1992) designed for **DOSBox Pure (RetroArch)**, DOSBox Staging, DOSBox-X, and 32-bit DOS environments.
 
@@ -9,14 +27,6 @@ The original 1992 EGA game scrolls in chunky 8-pixel tile jumps at ~10.8 FPS. `c
 - Smooth spinning collectible stars, blast rings, rising pickups, shards, debris, and hazard animations
 - Authentic hardware AdLib (OPL2) music, PC speaker SFX, and VGA DAC palette fades/flashes
 - Self-contained 32-bit protected-mode executables (CauseWay extender stubbed in — no external `DOS4GW.EXE` or `CWSDPMI.EXE` required)
-
----
-
-## Before & After Comparison (60 FPS Video)
-
-[![Before vs After — Original 10.8 FPS vs cosmo-smooth 70 Hz (click to watch 60 FPS MP4)](docs/comparison-preview.png)](docs/comparison.mp4)
-
-> **Watch the 60 FPS side-by-side comparison:** [`docs/comparison.mp4`](docs/comparison.mp4) *(12 s, 1296×448 @ 60 FPS H.264 — synchronized capture of the Episode 1 attract-mode demo comparing `--classic` 10.8 FPS on the left vs `cosmo-smooth` 70 Hz on the right).*
 
 ---
 
