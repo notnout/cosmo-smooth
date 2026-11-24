@@ -18,7 +18,8 @@
 `cosmo-smooth` builds directly on these open-source projects:
 
 - **[Cosmore](https://github.com/smitelli/cosmore)** — source code
-  reconstruction of *Cosmo's Cosmic Adventure* v1.20.
+  reconstruction of *Cosmo's Cosmic Adventure* v1.20
+  (`COSMO{1..3}.EXE`, © 1992 Apogee Software, Ltd.).
   © 2020–2024 Scott Smitelli and contributors (MIT License).
 - **[Cosmodoc](https://cosmodoc.org/)** — technical teardown of the original
   engine and data formats by Scott Smitelli.
